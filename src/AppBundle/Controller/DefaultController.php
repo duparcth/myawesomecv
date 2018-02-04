@@ -10,10 +10,19 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/", name="homepage")
+     * @Route("/test/{name}/{firstname}", name="homepage")
      * @Template()
      */
-    public function indexAction(Request $request)
+    public function indexAction($name, $firstname)
+    {
+        return array('name' => $name, 'firstname' => $firstname);
+    }
+
+    /**
+     * @Route("/demo", name="demo")
+     * @Template()
+     */
+    public function demoAction(Request $request)
     {
         return array();
     }
