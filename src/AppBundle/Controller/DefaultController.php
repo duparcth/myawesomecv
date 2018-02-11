@@ -7,23 +7,42 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
+use AppBundle\Entity\Formation;
+
 class DefaultController extends Controller
 {
     /**
-     * @Route("/test/{name}/{firstname}", name="homepage")
+     * @Route("/cv/{name}/{firstname}", name="homepage")
      * @Template()
      */
-    public function indexAction($name, $firstname)
+    public function indexAction($name= "Florent", $firstname = "Coquil")
     {
-        return array('name' => $name, 'firstname' => $firstname);
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Formation');
+        $formations = $repo->findAll();
+        
+        return array(
+            'name' => $name,
+            'firstname' => $firstname,
+            'formations' => $formations
+        );
     }
 
     /**
-     * @Route("/demo", name="demo")
+     * @Route("/create/formation", name="create_formation")
      * @Template()
      */
-    public function demoAction(Request $request)
+    public function createAction(Request $request)
     {
+        $form = new Formation();
+        $form->setName("Ma formation");
+        $form->setDateDebut(New \DateTime());
+        $form->setDateFin(New \DateTime());
+        $form->setLieu("Brest, France");
+
+        $eManager = $this->getDoctrine()->getManager();
+        $eManager->persist($form);
+        $eManager->flush();
+
         return array();
     }
 }

@@ -2,12 +2,35 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="formation")
+ */
 class Formation {
     
+    /** 
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue 
+     **/
     private $id;
+    /** 
+     * @ORM\Column(type="string")
+     **/
     private $name;
+    /** 
+     * @ORM\Column(type="date")
+     **/
     private $dateDebut;
+    /** 
+     * @ORM\Column(type="date")
+     **/
     private $dateFin;
+    /** 
+     * @ORM\Column(type="string")
+     **/
     private $lieu;
 
     function getId()

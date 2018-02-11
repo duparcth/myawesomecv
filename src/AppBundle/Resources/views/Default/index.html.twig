@@ -419,13 +419,15 @@
                 <div class="col-md-9">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="content-item">
-                                <small>2010 - 2012</small>
-                                <h3>MA Product Design</h3>
-                                <h4>University of California</h4>
+                            {% for formation in formations %}
+                                <div class="content-item">
+                                    <small>{{ formation.getDateDebut()|date("Y-m-d") }} - {{ formation.getDateFin()|date("Y-m-d") }}</small>
+                                    <h3>{{ formation.getName() }}</h3>
+                                    <h4>{{ formation.getLieu() }}</h4>
 
-                                <p>United Kingdom, London</p>
-                            </div>
+                                    <p></p>
+                                </div>
+                            {% endfor %}
                             <!-- .experience-item -->
                             <div class="content-item">
                                 <small>2007 - 2010</small>
