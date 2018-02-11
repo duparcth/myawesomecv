@@ -4,45 +4,93 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Form\LoisirType;
+use AppBundle\Entity\Loisir;
 
-use AppBundle\Entity\Formation;
-
-class DefaultController extends Controller
+/**
+ * @Route("/loisirs")
+ */
+class LoisirController extends Controller
 {
     /**
-     * @Route("/cv/{name}/{firstname}", name="homepage")
+     * @Route("/create", name="create_loisir")
      * @Template()
      */
-    public function indexAction($name= "Florent", $firstname = "Coquil")
+    public function createAction()
     {
-        $repo = $this->getDoctrine()->getRepository('AppBundle:Formation');
-        $formations = $repo->findAll();
-        
+        $loisir = new Loisir();
+        $form = $this->createForm(LoisirType::class, $loisir);
+
         return array(
-            'name' => $name,
-            'firstname' => $firstname,
-            'formations' => $formations
+            'entity' => $loisir,
+            'form' => $form->createView(),
         );
     }
 
     /**
-     * @Route("/create/formation", name="create_formation")
+     * @Route("/create_valid", name="validate_create_loisir")
+     * @Method("POST")
+     */
+    public function validateLoisirAction(Request $request)
+    {
+        $loisir = new Loisir();
+        $form = $this->createForm(LoisirType::class, $loisir);
+        $form->handleRequest($request); 
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $eManager = $this->getDoctrine()->getManager();
+            $eManager->persist($loisir);
+            $eManager->flush();
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->redirectToRoute('create_loisir', array(
+            'entity' => $loisir,
+            'form' => $form->createView(),
+        ));
+    }
+    
+    /**
+     * @Route("/edit/{id}", name="edit_loisir")
      * @Template()
      */
-    public function createAction(Request $request)
+    public function editAction($id)
     {
-        $form = new Formation();
-        $form->setName("Ma formation");
-        $form->setDateDebut(New \DateTime());
-        $form->setDateFin(New \DateTime());
-        $form->setLieu("Brest, France");
-
         $eManager = $this->getDoctrine()->getManager();
-        $eManager->persist($form);
-        $eManager->flush();
+        $loisir = $eManager->getRepository("AppBundle:Loisir")->FindOneBy(["id" => $id]);
+        $form = $this->createForm(LoisirType::class, $loisir);
 
-        return array();
+        return array(
+            'entity' => $loisir,
+            'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * @Route("/edit_valid/{id}", name="validate_edit_loisir")
+     * @Method("POST")
+     */
+    public function validateEditLoisirAction(Request $request, $id)
+    {
+        $eManager = $this->getDoctrine()->getManager();
+        $loisir = $eManager->getRepository("AppBundle:Loisir")->FindOneBy(["id" => $id]);
+        $form = $this->createForm(LoisirType::class, $loisir);
+        $form->handleRequest($request); 
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $eManager->persist($loisir);
+            $eManager->flush();
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->redirectToRoute('create_loisir', array(
+            'entity' => $loisir,
+            'form' => $form->createView(),
+        ));
     }
 }

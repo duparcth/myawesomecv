@@ -3,10 +3,12 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="loisir")
+ * @ApiResource
  */
 class Loisir {
     
@@ -16,27 +18,28 @@ class Loisir {
      * @ORM\GeneratedValue 
      **/
     private $id;
+
     /** 
      * @ORM\Column(type="string")
      **/
     private $name;
     
-    function getId()
+    public function __construct()
+    {
+        
+    }
+    
+    public function getId()
     {
         return $this->id;
     }
 
-    function getName()
+    public function getName()
     {
         return $this->name;
     }
 
-    function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    function setName($name)
+    public function setName($name)
     {
         $this->name = $name;
     }
