@@ -1,0 +1,29 @@
+sudo add-apt-repository ppa:ondrej/php
+sudo apt-get update
+
+# Disable PHP5
+sudo a2dismod php5
+
+# Enable PHP 7.1
+sudo a2enmod php7.1
+
+# Restart APACHE
+sudo service apache2 restart
+
+Editer le fichier composer.json a la racine de votre projet
+
+remplacer
+
+"require": {
+        "php": ">=5.5.9",
+par
+
+"require": {
+        "php": ">=7.0",
+		
+De meme pour 
+
+"config": {
+        "platform": {
+            "php": "5.5.9"
+        },
